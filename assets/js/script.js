@@ -35,6 +35,7 @@ const convertirMoneda = (valorMoneda)=>{
 }
 // Función para renderizar los datos de la moneda seleccionada
 const renderMonedas = async () => {
+    
     const seleccionMoneda = moneda.value;
 
     // Verificar si se seleccionó una moneda

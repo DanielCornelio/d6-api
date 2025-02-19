@@ -42,3 +42,30 @@
     background-color: #fff;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
+
+.resultado{
+    margin-top: 20px;
+}
+.alert {
+    padding: 10px;
+    background-color: #f45e53;
+    border: 2px solid #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* When moving the mouse over the close button */
+  .closebtn:hover {
+    color: black;
+  }
