@@ -3,7 +3,7 @@ const pesosCLP = document.querySelector('#inputMoneda')
 const monedaSeleccionada = document.querySelector('#monedas');
 const resultado = document.querySelector('.resultado')
 const buscarBtn = document.querySelector('.buscar')
-
+let chartInstance = null;
 const showError = (texto) =>{
     const alertError = `
             <div class="alert">
@@ -14,9 +14,9 @@ const showError = (texto) =>{
     return alertError;
 }
 
-const getApi = async () => {
+const getApi = async (moneda) => {
     try {
-        const res = await fetch(urlApi);
+        const res = await fetch(urlApi+moneda);
         const data = await res.json();
         return data;
     } catch (error) {
@@ -37,18 +37,18 @@ const renderizarMonedas = async ()=>{
         return;
     }
 
-    const moneda = await getApi();
+    const moneda = await getApi(monedaSeleccionadaValue);
+    console.log(moneda)
 
-    if (!moneda || !moneda[monedaSeleccionadaValue]) {
+    if (!moneda || !moneda.serie) {
         resultado.innerHTML = showError('Moneda no encontrada');
         return;
     }
-    
-    
-    
-    const valorMoneda = moneda[monedaSeleccionadaValue].valor;
+        
+    const valorMoneda = moneda.serie[0].valor;
     const conversion = pesosCLPValue / valorMoneda;
 
+    drawChart(moneda.serie.slice(0, 10));
     let template = `<h2>${pesosCLPValue} CLP son ${conversion.toFixed(4)} ${monedaSeleccionada.options[monedaSeleccionada.selectedIndex].text}</h2>`
 
     pesosCLP.value = '';
@@ -62,3 +62,36 @@ const renderizarMonedas = async ()=>{
 
 
 buscarBtn.addEventListener('click', renderizarMonedas)
+
+
+function drawChart(data) {
+    const contentChart = document.querySelector('.content-chart')
+    contentChart.style.display = "block";
+
+    let canvas = document.getElementById('exchangeChart');
+    if (!canvas) {
+        console.error("Canvas no encontrado");
+        return;
+    }
+    let ctx = canvas.getContext('2d');
+    
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+    
+    let labels = data.map(d => new Date(d.fecha).toLocaleDateString());
+    let values = data.map(d => d.valor);
+    
+    chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels.reverse(),
+            datasets: [{
+                label: 'Historial últimos 10 días',
+                data: values.reverse(),
+                borderColor: '#008f7a',
+                fill: true
+            }]
+        }
+    });
+}
