@@ -4,6 +4,7 @@ const monedaSeleccionada = document.querySelector('#monedas');
 const resultado = document.querySelector('.resultado')
 const buscarBtn = document.querySelector('.buscar')
 let chartInstance = null;
+
 const showError = (texto) =>{
     const alertError = `
             <div class="alert">
@@ -38,7 +39,6 @@ const renderizarMonedas = async ()=>{
     }
 
     const moneda = await getApi(monedaSeleccionadaValue);
-    console.log(moneda)
 
     if (!moneda || !moneda.serie) {
         resultado.innerHTML = showError('Moneda no encontrada');
@@ -49,6 +49,7 @@ const renderizarMonedas = async ()=>{
     const conversion = pesosCLPValue / valorMoneda;
 
     drawChart(moneda.serie.slice(0, 10));
+    
     let template = `<h2>${pesosCLPValue} CLP son ${conversion.toFixed(4)} ${monedaSeleccionada.options[monedaSeleccionada.selectedIndex].text}</h2>`
 
     pesosCLP.value = '';
